@@ -1,6 +1,8 @@
 package org.example;
 
+import org.example.model.Director;
 import org.example.model.Item;
+import org.example.model.Movie;
 import org.example.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,15 +28,22 @@ public class App {
         try {
             session.beginTransaction();
 
-            Person person = session.get(Person.class, 4);
-            Item item = session.get(Item.class, 1);
+//            Person person = session.get(Person.class, 4);
+//            Item item = session.get(Item.class, 1);
+//
+//            item.getOwner().getItems().remove(item);
+//
+////            SQL request
+//            item.setOwner(person);
+//
+//            person.getItems().add(item);
 
-            item.getOwner().getItems().remove(item);
+            Director director = session.get(Director.class, 1);
+            List<Movie> movies = director.getMovies();
 
-//            SQL request
-            item.setOwner(person);
+            System.out.println(director);
+            System.out.println(movies);
 
-            person.getItems().add(item);
 
             session.getTransaction().commit();
 
