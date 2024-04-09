@@ -1,17 +1,12 @@
 package org.example;
 
-import org.example.model.Director;
-import org.example.model.Item;
-import org.example.model.Movie;
 import org.example.model.Passport;
 import org.example.model.Person;
+import org.example.model.Principal;
+import org.example.model.School;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Hello world!
@@ -20,6 +15,8 @@ import java.util.List;
 public class App {
     public static void main(String[] args) {
         Configuration configuration = new Configuration()
+                .addAnnotatedClass(Principal.class)
+                .addAnnotatedClass(School.class)
                 .addAnnotatedClass(Person.class)
                 .addAnnotatedClass(Passport.class);
 
@@ -29,7 +26,9 @@ public class App {
         try {
             session.beginTransaction();
 
-
+            Principal principal = session.get(Principal.class, 5);
+            School school = session.get(School.class, 3);
+            principal.setSchool(school);
 
             session.getTransaction().commit();
 

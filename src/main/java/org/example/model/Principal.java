@@ -1,16 +1,17 @@
 package org.example.model;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "Director")
-public class Director {
+@Table(name = "Principal")
+public class Principal {
 
     @Id
-    @Column(name = "director_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int director_id;
+    private int id;
 
     @Column(name = "name")
     private String name;
@@ -18,24 +19,25 @@ public class Director {
     @Column(name = "age")
     private int age;
 
-    @OneToMany(mappedBy = "director")
-    private List<Movie> movies;
+    @OneToOne(mappedBy = "principal") /* че эта */
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    private School school;
 
-    public Director() {
+    public Principal() {
 
     }
 
-    public Director(String name, int age) {
+    public Principal(String name, int age) {
         this.name = name;
         this.age = age;
     }
 
-    public int getDirector_id() {
-        return director_id;
+    public int getId() {
+        return id;
     }
 
-    public void setDirector_id(int id) {
-        this.director_id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -54,18 +56,19 @@ public class Director {
         this.age = age;
     }
 
-    public List<Movie> getMovies() {
-        return movies;
+    public School getSchool() {
+        return school;
     }
 
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
+    public void setSchool(School school) {
+        this.school = school;
+        school.setPrincipal(this);
     }
 
     @Override
     public String toString() {
-        return "Director{" +
-                "director_id=" + director_id +
+        return "Principal{" +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 '}';
