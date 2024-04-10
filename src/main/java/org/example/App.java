@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.model.Item;
 import org.example.model.Person;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -21,22 +22,38 @@ public class App {
                 .addAnnotatedClass(Item.class);
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
-        Session session = sessionFactory.getCurrentSession();
 
         try {
+            Session session = sessionFactory.getCurrentSession();
             session.beginTransaction();
 
-            Person person = session.get(Person.class, 4);
-            Item item = session.get(Item.class, 1);
-
-            item.getOwner().getItems().remove(item);
-
-//            SQL request
-            item.setOwner(person);
-
-            person.getItems().add(item);
+            Person person = session.get(Person.class, 1);
+            System.out.println("Получили человека");
 
             session.getTransaction().commit();
+            // session.close()
+            System.out.println("Сессия закончилась");
+
+
+            // Открываем сессию и тразанзакцию еще раз. Можем делать в любом месте в коде
+            session = sessionFactory.getCurrentSession();
+            session.beginTransaction();
+
+            System.out.println("Внутри второй тразнакции");
+            person = (Person) session.merge(person);
+//            Hibernate.initialize(person.getItems());
+
+            List<Item> itemList = session.createQuery("SELECT i FROM Item i WHERE i.owner.id=:personId", Item.class)
+                    .setParameter("personId", person.getId()).getResultList();
+
+            System.out.println(itemList);
+
+            session.getTransaction().commit();
+
+            System.out.println("Вне сессии");
+
+            // Связанные товары были загружены раннее (2 сессия)
+//            System.out.println(person.getItems());
 
         } finally {
             sessionFactory.close();

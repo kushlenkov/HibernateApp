@@ -11,7 +11,7 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "item_name")
+    @Column(name = "name")
     private String itemName;
 
     @ManyToOne
